@@ -13,6 +13,14 @@ interface Book {
   groups: string[];
 }
 
+// เพิ่มการประกาศ interface Event
+interface Event {
+  name: string;
+  category: string;
+  description: string;
+}
+
+
 // สร้างตัวแปร books เพื่อเก็บข้อมูล list ของหนังสือ
 const books: Book[] = [
     {
@@ -58,7 +66,29 @@ const books: Book[] = [
     }
   ];
 
-
+// สร้างตัวแปร events เพื่อเก็บข้อมูล list ของ events
+const events: Event[] = [
+  {
+    name: "Football Match",
+    category: "Sports",
+    description: "A football match between two local teams."
+  },
+  {
+    name: "Music Concert",
+    category: "Music",
+    description: "A live music concert featuring popular bands."
+  },
+  {
+    name: "Art Exhibition",
+    category: "Art",
+    description: "An exhibition showcasing modern art."
+  },
+  {
+    name: "Basketball Game",
+    category: "Sports",
+    description: "A basketball game between two rival teams."
+  }
+];
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
@@ -69,7 +99,27 @@ app.get('/books', (req: Request, res: Response) => {
   res.json(books);
 });
 
+// เพิ่ม endpoint /events เพื่อกรองข้อมูลตาม category
+app.get("/events", (req: Request, res: Response) => {
+  const category = req.query.category as string;
+  const filteredEvents = events.filter((event) => event.category === category);
+  res.json(filteredEvents);
+});
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-///พิมพ์ url http://localhost:3000/books ใน browser 
+//http://localhost:3000/events?category=Sports
+//event category
+// [
+//   {
+//     "name": "Football Match",
+//     "category": "Sports",
+//     "description": "A football match between two local teams."
+//   },
+//   {
+//     "name": "Basketball Game",
+//     "category": "Sports",
+//     "description": "A basketball game between two rival teams."
+//   }
+// ]
