@@ -109,29 +109,20 @@ app.get("/events", (req, res) => {
   }
 });
 
+// เพิ่ม endpoint /search-books เพื่อค้นหาหนังสือที่มีชื่อขึ้นต้นด้วยคำที่ระบุเป็น query parameter
+app.get('/search-books', (req: Request, res: Response) => {
+  const titleQuery = req.query.title as string;
+  if (titleQuery) {
+    const filteredBooks = books.filter((book) =>
+      book.title.toLowerCase().startsWith(titleQuery.toLowerCase())
+    );
+    res.json(filteredBooks);
+  } else {
+    res.json([]);
+  }
+});
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-//http://localhost:3000/events
-// [
-//   {
-//     "name": "Football Match",
-//     "category": "Sports",
-//     "description": "A football match between two local teams."
-//   },
-//   {
-//     "name": "Music Concert",
-//     "category": "Music",
-//     "description": "A live music concert featuring popular bands."
-//   },
-//   {
-//     "name": "Art Exhibition",
-//     "category": "Art",
-//     "description": "An exhibition showcasing modern art."
-//   },
-//   {
-//     "name": "Basketball Game",
-//     "category": "Sports",
-//     "description": "A basketball game between two rival teams."
-//   }
-// ]
+///เช่นหาหนังสือขึ้นต้น "One" ให้ใช้ http://localhost:3000/search-books?title=One ได้เรื่อง One Piece
