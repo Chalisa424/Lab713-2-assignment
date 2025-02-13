@@ -16,6 +16,7 @@ interface Book {
   author_name: string;
   description: string;
   groups: string[];
+  
 }
 
 // เพิ่มการประกาศ interface Event
@@ -169,8 +170,27 @@ app.post("/events", (req, res) => {
   res.json(newEvent);
 });
 
+//สร้าง post methods เพื่อเพิ่มข้อมูล
+app.post("/books", (req: Request, res: Response) => {
+  const newBook: Book = req.body;
+
+  // เช็คว่า id ของหนังสือที่ส่งมามีอยู่ในระบบหรือไม่
+  const existingBookIndex = books.findIndex((book) => book.id === newBook.id);
+  
+  if (existingBookIndex !== -1) {
+    // ถ้า id มีอยู่แล้วให้ทำการอัปเดตข้อมูล
+    books[existingBookIndex] = newBook;
+    res.json({ message: 'Book updated successfully', book: newBook });
+  } else {
+    // ถ้า id ไม่มีอยู่ในระบบให้เพิ่มข้อมูลใหม่
+    books.push(newBook);
+    res.json({ message: 'Book added successfully', book: newBook });
+  }
+});
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 }); 
+///เนื่องจาก Task12.1-12.3 มีการใส่ app.use(express.json());ไว้อยู่แล้ว จึง post ข้อมูลได้เลย
+/// Task12.4-12.5 POST request ไปที่ http://localhost:3000/books แก้ไขข้อมูลที่ id3 และอัปเดตข้อมูลของหนังสือที่ id: 3 เป็นข้อมูลใหม่ที่ส่งมาใน request และ response
 
