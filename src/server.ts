@@ -1,3 +1,4 @@
+//Task 10 การสร้าง endpoint เพื่อแสดงผล object ตาม id
 import express, { Request, Response } from 'express';
 
 const app = express();
@@ -7,6 +8,7 @@ app.set("json spaces", 2);
 
 // เพิ่มการประกาศ interface Book
 interface Book {
+  id: number;
   title: string;
   author_name: string;
   description: string;
@@ -15,6 +17,7 @@ interface Book {
 
 // เพิ่มการประกาศ interface Event
 interface Event {
+  id: number;
   name: string;
   category: string;
   description: string;
@@ -23,6 +26,7 @@ interface Event {
 // สร้างตัวแปร books เพื่อเก็บข้อมูล list ของหนังสือ
 const books: Book[] = [
     {
+      id: 1,
       title: "Fullmetal Alchemist",
       author_name: "Hiromu Arakawa",
       description: "Edward and Alphonse Elric break alchemy's ultimate taboo—human transmutation—to revive their mother, but their attempt fails disastrously. Edward loses a leg, Alphonse his body, and Edward sacrifices an arm to bind his brother's soul to armor. Seeking to restore themselves, they pursue the Philosopher's Stone, uncovering sinister truths along the way.",
@@ -30,6 +34,7 @@ const books: Book[] = [
     },
   
     {
+      id: 2,
       title: "Attack on Titan",
       author_name: "Hajime Isayama",
       description: "In a world where humanity resides within enormous walled cities to escape the monstrous Titans, young Eren Yeager vows to eliminate them after witnessing the destruction of his home. As he joins the military, he uncovers deep conspiracies about the Titans' true origins.",
@@ -37,6 +42,7 @@ const books: Book[] = [
     },
   
     {
+      id: 3,
       title: "Death Note",
       author_name: "Tsugumi Ohba",
       description: "A high school student, Light Yagami, discovers a mysterious notebook that allows him to kill anyone whose name he writes in it. With his newfound power, he sets out to cleanse the world of criminals, but soon finds himself in a cat-and-mouse game with the genius detective L.",
@@ -44,6 +50,7 @@ const books: Book[] = [
     },
   
     {
+      id: 4,
       title: "One Piece",
       author_name: "Eiichiro Oda",
       description: "Monkey D. Luffy, a young pirate with the ability to stretch his body like rubber, sets out on a grand adventure to find the legendary One Piece and become the King of the Pirates. Along the way, he gathers a diverse crew and faces formidable foes.",
@@ -51,6 +58,7 @@ const books: Book[] = [
     },
   
     {
+      id: 5,
       title: "Naruto",
       author_name: "Masashi Kishimoto",
       description: "Naruto Uzumaki, an orphaned ninja, dreams of becoming the strongest ninja and earning the title of Hokage. With the power of the Nine-Tailed Fox sealed within him, he faces many trials, makes loyal friends, and battles powerful enemies to achieve his goal.",
@@ -58,6 +66,7 @@ const books: Book[] = [
     },
   
     {
+      id: 6,
       title: "Dragon Ball",
       author_name: "Akira Toriyama",
       description: "The adventures of Goku, a powerful martial artist with a pure heart, as he trains, fights powerful enemies, and seeks the mystical Dragon Balls that grant any wish. Along the way, he forms friendships and battles legendary warriors.",
@@ -68,21 +77,25 @@ const books: Book[] = [
 // สร้างตัวแปร events เพื่อเก็บข้อมูล list ของ events
 const events: Event[] = [
   {
+    id: 1,
     name: "Football Match",
     category: "Sports",
     description: "A football match between two local teams."
   },
   {
+    id: 2,
     name: "Music Concert",
     category: "Music",
     description: "A live music concert featuring popular bands."
   },
   {
+    id: 3,
     name: "Art Exhibition",
     category: "Art",
     description: "An exhibition showcasing modern art."
   },
   {
+    id: 4,
     name: "Basketball Game",
     category: "Sports",
     description: "A basketball game between two rival teams."
@@ -109,6 +122,17 @@ app.get("/events", (req, res) => {
   }
 });
 
+// เพิ่ม endpoint /events/:id เพื่อดึงข้อมูลของ event ตาม id
+app.get("/events/:id", (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const event = events.find((event) => event.id === id);
+  if (event) {
+    res.json(event);
+  } else {
+    res.status(404).send("Event not found");
+  }
+});
+
 // เพิ่ม endpoint /search-books เพื่อค้นหาหนังสือที่มีชื่อขึ้นต้นด้วยคำที่ระบุเป็น query parameter
 app.get('/search-books', (req: Request, res: Response) => {
   const titleQuery = req.query.title as string;
@@ -125,4 +149,5 @@ app.get('/search-books', (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-///เช่นหาหนังสือขึ้นต้น "One" ให้ใช้ http://localhost:3000/search-books?title=One ได้เรื่อง One Piece
+////// ทดสอบเข้าไปที่ http://localhost:3000/events/1 จะเห็นข้อมูลของ event ที่มี id เท่ากับ 1 = football match
+////// ทดสอบเข้าไปที่ http://localhost:3000/books/1 ได้ผลลัพธ์ว่า Cannot GET /books/1
