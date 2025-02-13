@@ -146,8 +146,19 @@ app.get('/search-books', (req: Request, res: Response) => {
   }
 });
 
+// เพิ่ม endpoint /books/:id เพื่อดึงข้อมูลของหนังสือตาม id
+app.get("/books/:id", (req: Request, res: Response) => {
+  const id = parseInt(req.params.id); // แปลง id จาก string เป็น number
+  const book = books[id - 1]; // หา book โดยใช้ index (id เริ่มที่ 1 แต่ array index เริ่มที่ 0)
+
+  if (book) {
+    res.json(book);
+  } else {
+    res.status(404).send("Book not found");
+  }
+});
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-////// ทดสอบเข้าไปที่ http://localhost:3000/events/1 จะเห็นข้อมูลของ event ที่มี id เท่ากับ 1 = football match
-////// ทดสอบเข้าไปที่ http://localhost:3000/books/1 ได้ผลลัพธ์ว่า Cannot GET /books/1
+////// ทดสอบเข้าไปที่ http://localhost:3000/books/1 จะเห็นข้อมูลของหนังสือที่มี id1 ถูกแสดงออกมา เรื่อง Fullmetal Alchemist
