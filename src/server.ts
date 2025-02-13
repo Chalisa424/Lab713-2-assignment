@@ -1,9 +1,12 @@
-//Task 10 การสร้าง endpoint เพื่อแสดงผล object ตาม id
+//Task 11 การสร้าง endpoint เพื่อเพิ่มข้อมูล
 import express, { Request, Response } from 'express';
 
 const app = express();
 const port = 3000;
 app.set("json spaces", 2);
+
+// ใช้ middleware เพื่อรองรับ JSON request body
+app.use(express.json());
 
 
 // เพิ่มการประกาศ interface Book
@@ -146,6 +149,7 @@ app.get('/search-books', (req: Request, res: Response) => {
   }
 });
 
+
 // เพิ่ม endpoint /books/:id เพื่อดึงข้อมูลของหนังสือตาม id
 app.get("/books/:id", (req: Request, res: Response) => {
   const id = parseInt(req.params.id); // แปลง id จาก string เป็น number
@@ -158,7 +162,15 @@ app.get("/books/:id", (req: Request, res: Response) => {
   }
 });
 
+app.post("/events", (req, res) => {
+  const newEvent: Event = req.body;
+  newEvent.id = events.length + 1;
+  events.push(newEvent);
+  res.json(newEvent);
+});
+
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
-});
-////// ทดสอบเข้าไปที่ http://localhost:3000/books/1 จะเห็นข้อมูลของหนังสือที่มี id1 ถูกแสดงออกมา เรื่อง Fullmetal Alchemist
+}); 
+
