@@ -20,7 +20,6 @@ interface Event {
   description: string;
 }
 
-
 // สร้างตัวแปร books เพื่อเก็บข้อมูล list ของหนังสือ
 const books: Book[] = [
     {
@@ -100,22 +99,35 @@ app.get('/books', (req: Request, res: Response) => {
 });
 
 // เพิ่ม endpoint /events เพื่อกรองข้อมูลตาม category
-app.get("/events", (req: Request, res: Response) => {
-  const category = req.query.category as string;
+app.get("/events", (req, res) => {
+  if (req.query.category) {
+  const category = req.query.category;
   const filteredEvents = events.filter((event) => event.category === category);
   res.json(filteredEvents);
+  } else {
+  res.json(events);
+  }
 });
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-//http://localhost:3000/events?category=Sports
-//event category
+//http://localhost:3000/events
 // [
 //   {
 //     "name": "Football Match",
 //     "category": "Sports",
 //     "description": "A football match between two local teams."
+//   },
+//   {
+//     "name": "Music Concert",
+//     "category": "Music",
+//     "description": "A live music concert featuring popular bands."
+//   },
+//   {
+//     "name": "Art Exhibition",
+//     "category": "Art",
+//     "description": "An exhibition showcasing modern art."
 //   },
 //   {
 //     "name": "Basketball Game",
